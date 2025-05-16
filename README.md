@@ -1,20 +1,25 @@
 # Nothing BOT Comedy
 
-<div align="left">
+<div align="center">
+  <br>
   <h3>The Comedy Open Mic Automation System</h3>
 </div>
 
 
 
 <div align="center">
+<br>
     <img src="https://img.shields.io/badge/Type-WhatsApp_Bot-brightgreen" alt="Type: WhatsApp Bot">
     <img src="https://img.shields.io/badge/Duration-7_Months-blue" alt="Duration: 7 Months">
     <img src="https://img.shields.io/badge/Status-Decommissioned-blue" alt="Status: Decommissioned">
     <img src="https://img.shields.io/badge/Processed-2200%2B_Requests-blueviolet" alt="Processed: 2200+ Requests">
     <img src="https://img.shields.io/badge/User_Base-150%2B_Comics-violet" alt="User Base: 150+ Comics">
+    <br>
 </div>
 
 <div align="center">
+<br>
+<br>
     <img src="https://img.shields.io/badge/-Glens_Bakehouse,_Koramangala-white?style=for-the-badge&logo=organicmaps&logoColor=black" alt="Glen's Bakehouse, Koramangala">
     <img src="https://img.shields.io/badge/-_Punchlime_Productions-black?style=for-the-badge&logo=planet&logoColor=white" alt="Punchlime Production">
 </div>
