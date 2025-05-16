@@ -43,7 +43,7 @@ Over its 7-month lifespan, the bot processed more than 2200 requests and maintai
 
 The project evolved through two significant iterations:
 
-### Version 1 (Deployed) 
+## Version 1 (Deployed) 
 
 A fully functional WhatsApp Bot powered by:
 - **Twilio**: Handled the conversational front-end via WhatsApp Business API
@@ -62,7 +62,7 @@ This version was in production for 7 months, handling all spot management duties
     <br>
 </div>
 
-### Version 2 (In Development)
+## Version 2 (In Development)
 
 An enhanced version designed to improve scalability and performance:
 - **WhatsApp Business API**: Direct integration without Twilio
@@ -85,7 +85,7 @@ Development was discontinued when the venue closed operations.
 
 ## 🚀 Features
 
-<div align="center">
+<div align="left">
   <table>
     <tr>
       <td align="center">🗣️</td>
