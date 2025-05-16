@@ -1,0 +1,71 @@
+# Configuration files
+config.js
+
+# Environment files
+.env
+.env.*
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Node.js dependencies
+npm-debug.log
+yarn-error.log
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebaserc
+.runtimeconfig.json
+
+# Environment variables
+.env.local
+.env.*.local
+functions/.env
+functions/.env.local
+
+# Editor and IDE files
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs/
+
+# Build output
+dist/
+build/
+public/build/
+lib/
+
+# Typescript
+*.tsbuildinfo
+
+# Testing
+coverage/
+
+# Google Apps Script
+.clasp.json
+.clasprc.json
+
+# Temporary files
+*.tmp
+*.temp
+.cache/ 

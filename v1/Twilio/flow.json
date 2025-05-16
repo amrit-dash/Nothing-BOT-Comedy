@@ -1,0 +1,3368 @@
+{
+    "description": "A New Flow",
+    "states": [
+      {
+        "name": "Trigger",
+        "type": "trigger",
+        "transitions": [
+          {
+            "next": "new_ping",
+            "event": "incomingMessage"
+          },
+          {
+            "event": "incomingCall"
+          },
+          {
+            "event": "incomingConversationMessage"
+          },
+          {
+            "next": "api_actions",
+            "event": "incomingRequest"
+          },
+          {
+            "event": "incomingParent"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 50,
+            "y": -360
+          }
+        }
+      },
+      {
+        "name": "check_message",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "event": "noMatch"
+          },
+          {
+            "next": "spot_day",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains spot",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "contains",
+                "value": "spot"
+              }
+            ]
+          },
+          {
+            "next": "spot_day",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains Spot",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "contains",
+                "value": "Spot"
+              }
+            ]
+          },
+          {
+            "next": "spot_day",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value regex .*spot.*",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "regex",
+                "value": ".*spot.*"
+              }
+            ]
+          },
+          {
+            "next": "spot_day",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value regex .*spot",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "regex",
+                "value": "spot.*"
+              }
+            ]
+          },
+          {
+            "next": "spot_day",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value regex .*spot",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "regex",
+                "value": ".*spot"
+              }
+            ]
+          },
+          {
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value matches_any_of hello, Hello, hi, Hi, Hey, hey, Hola, hola",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "matches_any_of",
+                "value": "hello, Hello, hi, Hi, Hey, hey, Hola, hola"
+              }
+            ]
+          },
+          {
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains who_am_i",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "contains",
+                "value": "who_am_i"
+              }
+            ]
+          },
+          {
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains main_menu",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "contains",
+                "value": "main_menu"
+              }
+            ]
+          },
+          {
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value equal_to all_features",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "contains",
+                "value": "all_features"
+              }
+            ]
+          },
+          {
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value equal_to page_1",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "equal_to",
+                "value": "page_1"
+              }
+            ]
+          },
+          {
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value equal_to page_2",
+                "arguments": [
+                  "{{flow.variables.value.message}}"
+                ],
+                "type": "equal_to",
+                "value": "page_2"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{flow.variables.value.message}}",
+          "offset": {
+            "x": 190,
+            "y": 470
+          }
+        }
+      },
+      {
+        "name": "spot_day",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "is_valid_day",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "day_not_selected",
+            "event": "timeout"
+          },
+          {
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1260,
+            "y": 1030
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "content_sid": "HX2232794939805a01f6fd7bef805bc453",
+          "timeout": "21600"
+        }
+      },
+      {
+        "name": "request_registered",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 170,
+            "y": 1340
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Thank you, {{flow.variables.value. firstName}}. I've noted your request down. Will ping you on spot confirmation once the lineup is ready by Monday! 🫡\n\nN.B. Your preference might not be preferred while curation."
+        }
+      },
+      {
+        "name": "day_not_selected",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "spot_day",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1370,
+            "y": 1370
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I didn't get any response back from you on any preferred day."
+        }
+      },
+      {
+        "name": "initial_fail",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "next": "fail_2",
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -450,
+            "y": 470
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX19e7b6fb230c32d003150144259d1ebc",
+          "body": "Sorry {{flow.variables.value.firstName}}. I only help in managing weekday spots at Glens Bakehouse, Koramangala. \n\nI curate the lineups on Monday, and you can ping me on Sundays to check for a spot on the following week."
+        }
+      },
+      {
+        "name": "fail_2",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -140,
+            "y": 470
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX19e7b6fb230c32d003150144259d1ebc",
+          "body": "Sorry {{flow.variables.value.firstName}}, but I can only help you request spots at Glen's if available. \nBut for that, you gotta ask me nicely, like: \"Can I get a spot for next week?\""
+        }
+      },
+      {
+        "name": "new_ping",
+        "type": "make-http-request",
+        "transitions": [
+          {
+            "next": "first_error_check",
+            "event": "success"
+          },
+          {
+            "next": "main_error_notification_1_amrit",
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 850,
+            "y": -110
+          },
+          "method": "POST",
+          "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+          "add_twilio_auth": false,
+          "parameters": [
+            {
+              "value": "{{trigger.message.Body}}",
+              "key": "body"
+            },
+            {
+              "value": "{{trigger.message.From}}",
+              "key": "from"
+            },
+            {
+              "value": "newPing",
+              "key": "action"
+            },
+            {
+              "value": "{{trigger.message.ProfileName}}",
+              "key": "waProfileName"
+            }
+          ],
+          "url": "https://script.google.com/macros/s/AKfycby15ff4DPac_sQ9s7uZzr7UZ18zkHNPnJ_yd1rCn6qKVy7fnH-SrQkAb6Cqyem4C9mi/exec"
+        }
+      },
+      {
+        "name": "last_week",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -840,
+            "y": 470
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Sorry {{flow.variables.value. firstName}}. Unfortunately, no spots are available for this week, as you already had a spot last week. \nBut I've noted you down and will reach out if anything opens up! 🫡"
+        }
+      },
+      {
+        "name": "sheet_variables",
+        "type": "set-variables",
+        "transitions": [
+          {
+            "next": "error_check",
+            "event": "next"
+          }
+        ],
+        "properties": {
+          "variables": [
+            {
+              "type": "json_object",
+              "value": "{{widgets.new_ping.body}}",
+              "key": "value"
+            }
+          ],
+          "offset": {
+            "x": 230,
+            "y": 110
+          }
+        }
+      },
+      {
+        "name": "hello_you",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1640,
+            "y": 730
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Hello {{flow.variables.value.firstName}}. Good day!"
+        }
+      },
+      {
+        "name": "reason_code_check",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "check_message",
+            "event": "noMatch"
+          },
+          {
+            "next": "last_week",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains LW",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "LW"
+              }
+            ]
+          },
+          {
+            "next": "new_contact",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains NC",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "NC"
+              }
+            ]
+          },
+          {
+            "next": "check_message",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains NP",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "NP"
+              }
+            ]
+          },
+          {
+            "next": "custom_request",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains CR",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "CR"
+              }
+            ]
+          },
+          {
+            "next": "midweek_spot",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains WD",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "WD"
+              }
+            ]
+          },
+          {
+            "next": "weekday_poc",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains WP",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "WP"
+              }
+            ]
+          },
+          {
+            "next": "banned_comic",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains BC",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "BC"
+              }
+            ]
+          },
+          {
+            "next": "ignored_comic",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains IC",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "IC"
+              }
+            ]
+          },
+          {
+            "next": "preference_check",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains DS",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "DS"
+              }
+            ]
+          },
+          {
+            "next": "spot_day",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains SR",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "SR"
+              }
+            ]
+          },
+          {
+            "next": "cancel_spot",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains CS",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "CS"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{flow.variables.value.reasonCode}}",
+          "offset": {
+            "x": -1340,
+            "y": 160
+          }
+        }
+      },
+      {
+        "name": "custom_request",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1270,
+            "y": 470
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "{{flow.variables.value.customResponse}}"
+        }
+      },
+      {
+        "name": "who_am_i",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1650,
+            "y": 1000
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HXc529826d550fdb20836c3b8036ab8a59",
+          "body": "Hello {{flow.variables.value.firstName}}. Good day!"
+        }
+      },
+      {
+        "name": "spot_time",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "is_valid_time",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "time_not_selected",
+            "event": "timeout"
+          },
+          {
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 900,
+            "y": 1030
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "content_sid": "HX48f9c27fc9bc4c12be15361426008447",
+          "timeout": "21600"
+        }
+      },
+      {
+        "name": "time_not_selected",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "spot_time",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1010,
+            "y": 1370
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I didn't get any response back from you on any preferred time slot."
+        }
+      },
+      {
+        "name": "update_preference",
+        "type": "make-http-request",
+        "transitions": [
+          {
+            "next": "request_registered",
+            "event": "success"
+          },
+          {
+            "next": "updateError_notification_amrit",
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 550,
+            "y": 1030
+          },
+          "method": "POST",
+          "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+          "add_twilio_auth": false,
+          "parameters": [
+            {
+              "value": "{{widgets.spot_day.inbound.Body}}",
+              "key": "day"
+            },
+            {
+              "value": "{{widgets.spot_time.inbound.Body}}",
+              "key": "time"
+            },
+            {
+              "value": "updateSpotPreferences",
+              "key": "action"
+            },
+            {
+              "value": "{{flow.variables.value.spotRequestRowNumber}}",
+              "key": "spotRequestRowNumber"
+            },
+            {
+              "value": "{{flow.variables.value.spotAllocationRowNumber}}",
+              "key": "spotAllocationRowNumber"
+            },
+            {
+              "value": "{{flow.variables.value.fullName}}",
+              "key": "comicName"
+            },
+            {
+              "value": "{{flow.variables.value.formattedNumber}}",
+              "key": "comicNumber"
+            },
+            {
+              "value": "{{flow.variables.value.newPingRowNumber}}",
+              "key": "pingRowNumber"
+            }
+          ],
+          "url": "https://script.google.com/macros/s/AKfycby15ff4DPac_sQ9s7uZzr7UZ18zkHNPnJ_yd1rCn6qKVy7fnH-SrQkAb6Cqyem4C9mi/exec"
+        }
+      },
+      {
+        "name": "weekday_poc",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -840,
+            "y": 730
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HXc6e807c6152dcdc3852a9195edd028fa",
+          "body": "Sorry {{flow.variables.value. firstName}}. Unfortunately, no spots are available for this week, as you already had a spot last week. \nBut I've noted you down and will reach out if anything opens up! 🫡"
+        }
+      },
+      {
+        "name": "midweek_spot",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -840,
+            "y": 980
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX8d729d3b114107ee1178748f332cce57",
+          "body": "Sorry {{flow.variables.value. firstName}}.  🫡"
+        }
+      },
+      {
+        "name": "travelling_comic_check",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "travelling_comic_invalid_response",
+            "event": "noMatch"
+          },
+          {
+            "next": "ask_scene",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value matches yes",
+                "arguments": [
+                  "{{widgets.ask_travelling_comic.inbound.Body}}"
+                ],
+                "type": "matches_any_of",
+                "value": "Yes,yes,Y,y,YES,yeah,Yeah,Yup,yup"
+              }
+            ]
+          },
+          {
+            "next": "ask_time",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value matches no",
+                "arguments": [
+                  "{{widgets.ask_travelling_comic.inbound.Body}}"
+                ],
+                "type": "matches_any_of",
+                "value": "No,no,N,n,NO,nope,Nope,Nah,nah"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{widgets.ask_travelling_comic.inbound.Body}}",
+          "offset": {
+            "x": -1850,
+            "y": 730
+          }
+        }
+      },
+      {
+        "name": "travelling_not_told",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ask_travelling_comic",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1320,
+            "y": 730
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I didn't get any response back from you."
+        }
+      },
+      {
+        "name": "ask_scene",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "ask_time_travelling",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "scene_not_told",
+            "event": "timeout"
+          },
+          {
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1850,
+            "y": 1030
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "body": "That's great! \n*Welcome to Bangalore.*\n\nBy the way, which scene are you from?\n\n_N.B. Please just mention the name of the city._",
+          "timeout": "10800"
+        }
+      },
+      {
+        "name": "ask_name",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "save_contact",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "name_not_told",
+            "event": "timeout"
+          },
+          {
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2410,
+            "y": 1560
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "body": "Also, so sorry. Didn't ask your name yet.\n\nSo, what do I call you?\n\nP.S. Please let me know your full name here. That way I can address you by your name. 🫡",
+          "timeout": "10800"
+        }
+      },
+      {
+        "name": "ask_time",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "ask_name",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "time_not_told",
+            "event": "timeout"
+          },
+          {
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1520,
+            "y": 1030
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "body": "Cool cool. Maybe I haven't seen you around. \nNo issues. Can you let me know how long you have been doing comedy?\n\n_N.B. Standard format Examples: 2.5 years, 7 months, 1 year 2 months_\n\nP.S. Asking all of it as it will help me in sending your request to Amrit.\nP.P.S. Sorry for this standard set of bot questions! 🤖",
+          "timeout": "10800"
+        }
+      },
+      {
+        "name": "notify_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "new_ping",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1320,
+            "y": 1550
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Hey there, Amrit. There's a ping from a comic that you don't have in your contacts.\n\nComic's Name - {{widgets.ask_name.inbound.Body}} \nNumber - {{flow.variables.value.formattedNumber}}\n\n{% if widgets.ask_scene.inbound.Body %}\nScene - {{widgets.ask_scene.inbound.Body}}\nTime in Comedy - {{widgets.ask_time_travelling.inbound.Body}} \n{% else %}\nScene - BLR\nTime in Comedy - {{widgets.ask_time.inbound.Body}}\n{% endif %}\n\nI have attempted to save it for you now! You can still check."
+        }
+      },
+      {
+        "name": "time_not_told",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ask_time",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1320,
+            "y": 1250
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I didn't get any response back from you."
+        }
+      },
+      {
+        "name": "scene_not_told",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ask_scene",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1650,
+            "y": 1250
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I didn't get any response back from you."
+        }
+      },
+      {
+        "name": "contact_saved",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "notify_amrit",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1640,
+            "y": 1550
+          },
+          "content_variables": [
+            {
+              "value": "{{widgets.ask_name.inbound.Body}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HXc6962de7f4a7dea3e6cdbf2e3625de3d"
+        }
+      },
+      {
+        "name": "save_contact",
+        "type": "make-http-request",
+        "transitions": [
+          {
+            "next": "contact_saved",
+            "event": "success"
+          },
+          {
+            "next": "save_contact_fail_notification_amrit",
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2040,
+            "y": 1550
+          },
+          "method": "POST",
+          "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+          "add_twilio_auth": false,
+          "parameters": [
+            {
+              "value": "{{widgets.ask_name.inbound.Body}}",
+              "key": "name"
+            },
+            {
+              "value": "{{widgets.ask_time.inbound.Body}}",
+              "key": "timeInComedy"
+            },
+            {
+              "value": "saveNewContact",
+              "key": "action"
+            },
+            {
+              "value": "{{widgets.ask_scene.inbound.Body}}",
+              "key": "scene"
+            },
+            {
+              "value": "{{flow.variables.value.formattedNumber}}",
+              "key": "number"
+            },
+            {
+              "value": "{{widgets.ask_time_travelling.inbound.Body}}",
+              "key": "travellingComicTime"
+            },
+            {
+              "value": "{{trigger.message.ProfileName}}",
+              "key": "waProfileName"
+            },
+            {
+              "value": "{{flow.variables.value.newPingRowNumber}}",
+              "key": "pingRowNumber"
+            }
+          ],
+          "url": "https://script.google.com/macros/s/AKfycby15ff4DPac_sQ9s7uZzr7UZ18zkHNPnJ_yd1rCn6qKVy7fnH-SrQkAb6Cqyem4C9mi/exec"
+        }
+      },
+      {
+        "name": "ask_time_travelling",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "ask_name",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "time_not_told_travelling",
+            "event": "timeout"
+          },
+          {
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2200,
+            "y": 1030
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "body": "Cool cool. 🫡\nPlease let me know how long you have been doing comedy.\n\n_N.B. Standard format Examples: 2.5 years, 7 months, 1 year 2 months_\n\nP.S. Asking all of it as it will help me in sending your request to Amrit.\nP.P.S. Sorry for this standard set of bot questions! 🤖",
+          "timeout": "10800"
+        }
+      },
+      {
+        "name": "time_not_told_travelling",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ask_time_travelling",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2000,
+            "y": 1250
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I didn't get any response back from you."
+        }
+      },
+      {
+        "name": "name_not_told",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ask_name",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2720,
+            "y": 1780
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "👋🏼, ⬆️❓"
+        }
+      },
+      {
+        "name": "TESTING",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1690,
+            "y": -570
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "{{widgets.new_ping.body}}"
+        }
+      },
+      {
+        "name": "banned_comic",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "notification_amrit_BC",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -840,
+            "y": 1340
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX9c4677f3c6bb427d43bb1cacac5e281f",
+          "body": "Sorry {{flow.variables.value. firstName}}.  🫡"
+        }
+      },
+      {
+        "name": "notification_amrit_BC",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -470,
+            "y": 1340
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Hey. There's a new spot request from a banned comic: {{flow.variables.value.firstName}}"
+        }
+      },
+      {
+        "name": "ignored_comic",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "notification_amrit_IC",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -840,
+            "y": 1610
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HXc852adbe407f30f8813658faac67b2da",
+          "body": "Sorry {{flow.variables.value. firstName}}.  🫡"
+        }
+      },
+      {
+        "name": "notification_amrit_IC",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -470,
+            "y": 1610
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Hey. There's a new spot request from an ignored comic: {{flow.variables.value.firstName}}"
+        }
+      },
+      {
+        "name": "updateError_notification_user",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "update_preference",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 660,
+            "y": 1560
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I ran into a server problem. Please give me some time to breathe."
+        }
+      },
+      {
+        "name": "updateError_notification_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "updateError_notification_user",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 540,
+            "y": 1340
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Error: Webhook Failed for *{{trigger.message.From}} ({{trigger.message.ProfileName}})*\n\nIssue:\nReported Server Error\n{{widgets.update_preference.body}}\n\nError Code:\n{{widgets.update_preference.status_code}}"
+        }
+      },
+      {
+        "name": "duplicate_spot",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -600,
+            "y": 2220
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HXa7189fd74fe321eb7d43b22cee70b8e2",
+          "body": "Sorry {{flow.variables.value. firstName}}.  🫡"
+        }
+      },
+      {
+        "name": "error_check",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "reason_code_check",
+            "event": "noMatch"
+          },
+          {
+            "next": "error_notification_1_amrit",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains error",
+                "arguments": [
+                  "{{flow.variables.value}}"
+                ],
+                "type": "contains",
+                "value": "error"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{flow.variables.value}}",
+          "offset": {
+            "x": -1060,
+            "y": -90
+          }
+        }
+      },
+      {
+        "name": "error_notification_1_user",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -310,
+            "y": -90
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{flow.channel.address}}",
+          "body": "I ran into a bug. I've reported that to Amrit now. Please try again in some time. \n\nSorry for the inconvinience."
+        }
+      },
+      {
+        "name": "error_notification_1_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "error_notification_1_user",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -630,
+            "y": -90
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Error: Webhook Failed for *{{trigger.message.From}} ({{trigger.message.ProfileName}})*\n\nIssue:\n:{{flow.variables.value}}"
+        }
+      },
+      {
+        "name": "main_menu",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2010,
+            "y": 1000
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX6f8b9f5873561197bbc47439332445ca",
+          "body": "Hello {{flow.variables.value.firstName}}. Good day!"
+        }
+      },
+      {
+        "name": "all_features",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2000,
+            "y": 730
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX29c906a29aca2da6a16fa9bb3e97f4d8",
+          "body": "Hello {{flow.variables.value.firstName}}. Good day!"
+        }
+      },
+      {
+        "name": "send_custom_message",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3100,
+            "y": 650
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "{{flow.data.message}}"
+        }
+      },
+      {
+        "name": "api_actions",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "api_call_error_notification_amrit",
+            "event": "noMatch"
+          },
+          {
+            "next": "send_custom_message_template",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains send_message",
+                "arguments": [
+                  "{{flow.data.action}}"
+                ],
+                "type": "contains",
+                "value": "send_message"
+              }
+            ]
+          },
+          {
+            "next": "no_spot",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains no_spot",
+                "arguments": [
+                  "{{flow.data.action}}"
+                ],
+                "type": "contains",
+                "value": "no_spot"
+              }
+            ]
+          },
+          {
+            "next": "spot_confirmed",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains spot_confirmed",
+                "arguments": [
+                  "{{flow.data.action}}"
+                ],
+                "type": "contains",
+                "value": "spot_confirmed"
+              }
+            ]
+          },
+          {
+            "next": "mic_check",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains mic_check",
+                "arguments": [
+                  "{{flow.data.action}}"
+                ],
+                "type": "contains",
+                "value": "mic_check"
+              }
+            ]
+          },
+          {
+            "next": "ad_hoc_spot",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains ad_hoc_spot",
+                "arguments": [
+                  "{{flow.data.action}}"
+                ],
+                "type": "contains",
+                "value": "ad_hoc_spot"
+              }
+            ]
+          },
+          {
+            "next": "cancelled_spot",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains cancel_spot",
+                "arguments": [
+                  "{{flow.data.action}}"
+                ],
+                "type": "contains",
+                "value": "cancel_spot"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{flow.data.action}}",
+          "offset": {
+            "x": 1730,
+            "y": -110
+          }
+        }
+      },
+      {
+        "name": "no_spot",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1990,
+            "y": 210
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.data.name}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX89054579fcb2160ecfe555f60864a1b9"
+        }
+      },
+      {
+        "name": "spot_confirmed",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2330,
+            "y": 210
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.data.name}}",
+              "key": "1"
+            },
+            {
+              "value": "{{flow.data.parameters.spotDay}}",
+              "key": "2"
+            },
+            {
+              "value": "{{flow.data.parameters.spotTime}}",
+              "key": "3"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HXc330c44134e73e578f5f048a71f81fcb"
+        }
+      },
+      {
+        "name": "main_error_notification_user",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1410,
+            "y": 200
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I ran into a server problem. Please try again.\n\nSorry for the inconvenience."
+        }
+      },
+      {
+        "name": "main_error_notification_1_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "main_error_notification_user",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1090,
+            "y": 200
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Error: Webhook Failed for *{{trigger.message.From}} ({{trigger.message.ProfileName}})*\n\nIssue:\nReported Server Error\n{{widgets.new_ping.body}}\n\nError Code:\n{{widgets.new_ping.status_code}}"
+        }
+      },
+      {
+        "name": "first_error_check",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "sheet_variables",
+            "event": "noMatch"
+          },
+          {
+            "next": "main_error_notification_1_amrit",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains error",
+                "arguments": [
+                  "{{widgets.new_ping.body}}"
+                ],
+                "type": "contains",
+                "value": "error"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{widgets.new_ping.body}}",
+          "offset": {
+            "x": 560,
+            "y": 110
+          }
+        }
+      },
+      {
+        "name": "is_valid_day",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "spot_time",
+            "event": "noMatch"
+          },
+          {
+            "next": "clear_spot_request",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value matches_any_of Cancel,cancel,no,No",
+                "arguments": [
+                  "{{widgets.spot_day.inbound.Body}}"
+                ],
+                "type": "matches_any_of",
+                "value": "Cancel,cancel,no,No,Cancel Request"
+              }
+            ]
+          },
+          {
+            "next": "wrong_day_selected",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value does_not_match_any_of Monday,Tuesday,Wednesday,Thursday,Friday,Anything Works",
+                "arguments": [
+                  "{{widgets.spot_day.inbound.Body}}"
+                ],
+                "type": "does_not_match_any_of",
+                "value": "Monday,Tuesday,Wednesday,Thursday,Friday,Anything Works"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{widgets.spot_day.inbound.Body}}",
+          "offset": {
+            "x": 690,
+            "y": 730
+          }
+        }
+      },
+      {
+        "name": "is_valid_time",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "update_preference",
+            "event": "noMatch"
+          },
+          {
+            "next": "clear_spot_request",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value matches_any_of Cancel,cancel,no,No",
+                "arguments": [
+                  "{{widgets.spot_time.inbound.Body}}"
+                ],
+                "type": "matches_any_of",
+                "value": "Cancel,cancel,no,No,Cancel Request,can"
+              }
+            ]
+          },
+          {
+            "next": "wrong_time_selected",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value does_not_match_any_of 10:00 PM,8:00 PM,Anything Works",
+                "arguments": [
+                  "{{widgets.spot_time.inbound.Body}}"
+                ],
+                "type": "does_not_match_any_of",
+                "value": "10:00 PM,8:00 PM,Anything Works"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{widgets.spot_time.inbound.Body}}",
+          "offset": {
+            "x": -170,
+            "y": 730
+          }
+        }
+      },
+      {
+        "name": "wrong_day_selected",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "spot_day",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1370,
+            "y": 1590
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Hmm... That does't sound like a day. Please select one from the dropdown."
+        }
+      },
+      {
+        "name": "wrong_time_selected",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "spot_time",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1010,
+            "y": 1590
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Hmm... That doesn't sound like a viable timeslot. Please select one from the dropdown."
+        }
+      },
+      {
+        "name": "mic_check",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "mic_check_8pm",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2660,
+            "y": 210
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX25cb736ce72b583aaa76860199b4cabc",
+          "body": "Houston... Dropping in a ping to check if the mics happened today."
+        }
+      },
+      {
+        "name": "mic_check_8pm",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "mic_check_10pm",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "mic_check_8pm",
+            "event": "timeout"
+          },
+          {
+            "next": "mic_check_8pm",
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2660,
+            "y": 430
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "content_sid": "HX7d3471d59d0dbf27fb54287d2d5c22a0",
+          "body": "Did 8 PM happen today?",
+          "timeout": "10800"
+        }
+      },
+      {
+        "name": "mic_check_10pm",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "update_mics",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "mic_check_10pm",
+            "event": "timeout"
+          },
+          {
+            "next": "mic_check_10pm",
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2660,
+            "y": 650
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "body": "Did 10 PM happen today?",
+          "timeout": "10800"
+        }
+      },
+      {
+        "name": "update_mics",
+        "type": "make-http-request",
+        "transitions": [
+          {
+            "next": "noted",
+            "event": "success"
+          },
+          {
+            "next": "update_mics_notification_amrit",
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2800,
+            "y": 920
+          },
+          "method": "POST",
+          "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+          "add_twilio_auth": false,
+          "parameters": [
+            {
+              "value": "{{widgets.mic_check_8pm.inbound.Body}}",
+              "key": "status8PM"
+            },
+            {
+              "value": "{{widgets.mic_check_10pm.inbound.Body}}",
+              "key": "status10PM"
+            },
+            {
+              "value": "micUpdate",
+              "key": "action"
+            }
+          ],
+          "url": "https://script.google.com/macros/s/AKfycby15ff4DPac_sQ9s7uZzr7UZ18zkHNPnJ_yd1rCn6qKVy7fnH-SrQkAb6Cqyem4C9mi/exec"
+        }
+      },
+      {
+        "name": "noted",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2440,
+            "y": 920
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Noted... 🫡"
+        }
+      },
+      {
+        "name": "greetings",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "send_custom_message",
+            "event": "sent"
+          },
+          {
+            "next": "send_custom_message",
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3190,
+            "y": 430
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX068144481ca55b526c2ea8ccb49612ff"
+        }
+      },
+      {
+        "name": "send_custom_message_template",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "next": "greetings",
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3070,
+            "y": 210
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.data.message}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX250f00102831d46c144f2bbdbfdca06a"
+        }
+      },
+      {
+        "name": "ping_akash",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1690,
+            "y": -810
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Hey, {{flow.variables.value. firstName}}.\nI do not yet handle curation for 8 PM mics. As I only take care of 10 PM lineups, I will note you down if a 10 PM spot is available for {{widgets.spot_day.inbound.Body}}  this week.\n\nPlease drop a ping to Akash to ask for an 8 PM spot. 🫡"
+        }
+      },
+      {
+        "name": "preference_check",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "duplicate_spot",
+            "event": "noMatch"
+          },
+          {
+            "next": "fill_missing_preference",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains BP",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "BP"
+              }
+            ]
+          },
+          {
+            "next": "allocated_spot",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains SE",
+                "arguments": [
+                  "{{flow.variables.value.reasonCode}}"
+                ],
+                "type": "contains",
+                "value": "SE"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{flow.variables.value.reasonCode}}",
+          "offset": {
+            "x": -840,
+            "y": 1900
+          }
+        }
+      },
+      {
+        "name": "fill_missing_preference",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "update_preference_check",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "preference_update_no",
+            "event": "timeout"
+          },
+          {
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -220,
+            "y": 2220
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.variables.value.firstName}}",
+              "key": "1"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "content_sid": "HX8ca8153307cdfc9d1ef8746dd1b9f966",
+          "timeout": "150"
+        }
+      },
+      {
+        "name": "update_preference_check",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "preference_update_no",
+            "event": "noMatch"
+          },
+          {
+            "next": "spot_day",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value matches_any_of Yes,yes,Y,y,YES,yeah,Yeah",
+                "arguments": [
+                  "{{widgets.fill_missing_preference.inbound.Body}}"
+                ],
+                "type": "matches_any_of",
+                "value": "Yes,yes,Y,y,YES,yeah,Yeah"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{widgets.fill_missing_preference.inbound.Body}}",
+          "offset": {
+            "x": -360,
+            "y": 1900
+          }
+        }
+      },
+      {
+        "name": "preference_update_no",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 280,
+            "y": 2120
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "No worries. Free will is, anyway, a myth! xD\n\nI anyways have your request down, will update your spot confirmation on Monday. 🫡"
+        }
+      },
+      {
+        "name": "allocated_spot",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -930,
+            "y": 2220
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "{{flow.variables.value.customResponse}}"
+        }
+      },
+      {
+        "name": "api_call_error_notification_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1400,
+            "y": -110
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "The Twilio Flow REST API has been called with some unresolved actions.\n\nPlease take a look.\n\nREST API called with parameters:\n{{flow.data}}"
+        }
+      },
+      {
+        "name": "ad_hoc_spot",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "check_ad_hoc_spot",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "ad_hoc_spot_no_reply_notification_amrit",
+            "event": "timeout"
+          },
+          {
+            "next": "ad_hoc_spot_alt",
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3460,
+            "y": 210
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.data.name}}",
+              "key": "name"
+            },
+            {
+              "value": "{{flow.data.parameters.day}}",
+              "key": "day"
+            },
+            {
+              "value": "{{flow.data.parameters.time}}",
+              "key": "time"
+            },
+            {
+              "value": "{{flow.data.parameters.dayCode}}",
+              "key": "dayCode"
+            },
+            {
+              "value": "{{flow.data.parameters. timeCode}}",
+              "key": "timeCode"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "content_sid": "HX83c969a4cc8f55e85c3ab6bae4dfddc8",
+          "timeout": "7200"
+        }
+      },
+      {
+        "name": "register_ad_hoc_spot",
+        "type": "make-http-request",
+        "transitions": [
+          {
+            "next": "ad_hoc_notification_user",
+            "event": "success"
+          },
+          {
+            "next": "ad_hoc_error_notification_amrit",
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3490,
+            "y": 700
+          },
+          "method": "POST",
+          "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+          "add_twilio_auth": false,
+          "parameters": [
+            {
+              "value": "book_me",
+              "key": "buttonPayload"
+            },
+            {
+              "value": "adHocSpotUpdate",
+              "key": "action"
+            },
+            {
+              "value": "{{flow.data.name}}",
+              "key": "name"
+            },
+            {
+              "value": "{{contact.channel.address}}",
+              "key": "number"
+            },
+            {
+              "value": "{{flow.data.parameters.dayCode}}",
+              "key": "spotDay"
+            },
+            {
+              "value": "{{flow.data.parameters.timeCode}}",
+              "key": "spotTime"
+            }
+          ],
+          "url": "https://script.google.com/macros/s/AKfycby15ff4DPac_sQ9s7uZzr7UZ18zkHNPnJ_yd1rCn6qKVy7fnH-SrQkAb6Cqyem4C9mi/exec"
+        }
+      },
+      {
+        "name": "comic_unavailable",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3810,
+            "y": 700
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Cool cool. No worries. 🫡"
+        }
+      },
+      {
+        "name": "check_ad_hoc_spot",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "invalid_choice",
+            "event": "noMatch"
+          },
+          {
+            "next": "register_ad_hoc_spot",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains book_me_",
+                "arguments": [
+                  "{{widgets.ad_hoc_spot.inbound.ButtonPayload}}"
+                ],
+                "type": "contains",
+                "value": "book_me_"
+              }
+            ]
+          },
+          {
+            "next": "comic_unavailable",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value contains not_available",
+                "arguments": [
+                  "{{widgets.ad_hoc_spot.inbound.ButtonPayload}}"
+                ],
+                "type": "contains",
+                "value": "not_available"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{widgets.ad_hoc_spot.inbound.ButtonPayload}}",
+          "offset": {
+            "x": 3660,
+            "y": 430
+          }
+        }
+      },
+      {
+        "name": "invalid_choice",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "check_with_amrit",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 4160,
+            "y": 700
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Unfortunately, I am not programmed for that response!\n\nThe spot request has now expired..."
+        }
+      },
+      {
+        "name": "update_mics_notification_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3120,
+            "y": 920
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Error: Webhook Failed\n\nIssue:\n{{widgets.update_mics.body}}"
+        }
+      },
+      {
+        "name": "save_contact_fail_notification_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "save_contact_fail_notification_user",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1860,
+            "y": 1810
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Error: Webhook Failed for *{{trigger.message.From}} ({{trigger.message.ProfileName}})*\n\nIssue:\nReported Server Error\n{{widgets.save_contact.body}}\n\nError Code:\n{{widgets.save_contact.status_code}}"
+        }
+      },
+      {
+        "name": "save_contact_fail_notification_user",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1540,
+            "y": 1810
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I ran into a server problem. Please give me some time to breathe."
+        }
+      },
+      {
+        "name": "ad_hoc_notification_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3700,
+            "y": 1140
+          },
+          "content_variables": [
+            {
+              "value": "Accepted",
+              "key": "status"
+            },
+            {
+              "value": "{{flow.data.name}}",
+              "key": "name"
+            },
+            {
+              "value": "{{flow.data.parameters.time}}",
+              "key": "time"
+            },
+            {
+              "value": "{{flow.data.parameters.day}}",
+              "key": "day"
+            },
+            {
+              "value": "None",
+              "key": "error"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "whatsapp:+917978416962",
+          "content_sid": "HXcac121debc0842c7544ba07f02bcc11c",
+          "body": "_Ad-Hoc Spot Request *Accepted*_\n\n*Comic -* {{flow.data.name}}\n*Spot Day -* {{flow.data.parameters.day}}\n*Spot Time -* {{flow.data.parameters.time}}"
+        }
+      },
+      {
+        "name": "ad_hoc_notification_user",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ad_hoc_notification_amrit",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3480,
+            "y": 920
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.data.name}}",
+              "key": "1"
+            },
+            {
+              "value": "{{flow.data.parameters.day}}",
+              "key": "2"
+            },
+            {
+              "value": "{{flow.data.parameters.time}}",
+              "key": "3"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HXc330c44134e73e578f5f048a71f81fcb"
+        }
+      },
+      {
+        "name": "ad_hoc_error_notification_user",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "check_with_amrit",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 4200,
+            "y": 920
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "I ran into a server problem and was unable to register the request."
+        }
+      },
+      {
+        "name": "ad_hoc_error_notification_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ad_hoc_error_notification_user",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3890,
+            "y": 920
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "Error: Webhook Failed for *{{trigger.message.From}} ({{trigger.message.ProfileName}})*\n\nIssue:\nReported Server Error\n{{widgets.register_ad_hoc_spot.body}}\n\nError Code:\n{{widgets.register_ad_hoc_spot.status_code}}"
+        }
+      },
+      {
+        "name": "check_with_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 4510,
+            "y": 700
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Please check with Amrit if the spot is still available. 🫡"
+        }
+      },
+      {
+        "name": "ad_hoc_spot_request_timout",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "check_with_amrit",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 4180,
+            "y": 210
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "The spot request has now expired..."
+        }
+      },
+      {
+        "name": "ask_travelling_comic",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "travelling_comic_check",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "travelling_not_told",
+            "event": "timeout"
+          },
+          {
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2000,
+            "y": 470
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "body": "Are you a travelling comic?\n\n_(Just revert back with a simple Yes/No.)_",
+          "timeout": "10800"
+        }
+      },
+      {
+        "name": "new_contact",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ask_travelling_comic",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1630,
+            "y": 470
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Hey there, buddy, sorry I do not happen to recall you. Probably cause Amrit does not have you in his contact. 🤦🏻‍♂️\n\nI'd need a few more details from you before I proceed..."
+        }
+      },
+      {
+        "name": "travelling_comic_invalid_response",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ask_travelling_comic",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2190,
+            "y": 730
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Hmm... I don't understand that!"
+        }
+      },
+      {
+        "name": "ad_hoc_spot_failed_notification_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 4430,
+            "y": 0
+          },
+          "content_variables": [
+            {
+              "value": "Failed To Send",
+              "key": "status"
+            },
+            {
+              "value": "{{flow.data.name}}",
+              "key": "name"
+            },
+            {
+              "value": "{{flow.data.parameters.time}}",
+              "key": "time"
+            },
+            {
+              "value": "{{flow.data.parameters.day}}",
+              "key": "day"
+            },
+            {
+              "value": "{{widgets.ad_hoc_spot.ErrorCode}}",
+              "key": "error"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "whatsapp:+917978416962",
+          "content_sid": "HXcac121debc0842c7544ba07f02bcc11c",
+          "body": "_Ad-Hoc Spot Request *Accepted*_\n\n*Comic -* {{flow.data.name}}\n*Spot Day -* {{flow.data.parameters.day}}\n*Spot Time -* {{flow.data.parameters.time}}"
+        }
+      },
+      {
+        "name": "ad_hoc_spot_no_reply_notification_amrit",
+        "type": "send-message",
+        "transitions": [
+          {
+            "next": "ad_hoc_spot_request_timout",
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 3840,
+            "y": 210
+          },
+          "content_variables": [
+            {
+              "value": "Not Responded",
+              "key": "status"
+            },
+            {
+              "value": "{{flow.data.name}}",
+              "key": "name"
+            },
+            {
+              "value": "{{flow.data.parameters.time}}",
+              "key": "time"
+            },
+            {
+              "value": "{{flow.data.parameters.day}}",
+              "key": "day"
+            },
+            {
+              "value": "None",
+              "key": "error"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "whatsapp:+917978416962",
+          "content_sid": "HXcac121debc0842c7544ba07f02bcc11c",
+          "body": "_Ad-Hoc Spot Request *Accepted*_\n\n*Comic -* {{flow.data.name}}\n*Spot Day -* {{flow.data.parameters.day}}\n*Spot Time -* {{flow.data.parameters.time}}"
+        }
+      },
+      {
+        "name": "cancelled_spot",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 1990,
+            "y": 410
+          },
+          "content_variables": [
+            {
+              "value": "Not Responded",
+              "key": "status"
+            },
+            {
+              "value": "{{flow.data.name}}",
+              "key": "name"
+            },
+            {
+              "value": "{{flow.data.parameters.time}}",
+              "key": "time"
+            },
+            {
+              "value": "{{flow.data.parameters.day}}",
+              "key": "day"
+            },
+            {
+              "value": "None",
+              "key": "error"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "whatsapp:+917978416962",
+          "body": "_New Spot Cancelled_\n\n*Comic -* {{flow.data.parameters. comicName}}\n*Spot Day -* {{flow.data.parameters.spotDay}}\n*Spot Time -* {{flow.data.parameters.spotTime}}"
+        }
+      },
+      {
+        "name": "ad_hoc_spot_alt",
+        "type": "send-and-wait-for-reply",
+        "transitions": [
+          {
+            "next": "check_response_ad_hoc",
+            "event": "incomingMessage"
+          },
+          {
+            "next": "ad_hoc_spot_no_reply_notification_amrit",
+            "event": "timeout"
+          },
+          {
+            "next": "ad_hoc_spot_failed_notification_amrit",
+            "event": "deliveryFailure"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 4100,
+            "y": -10
+          },
+          "content_variables": [
+            {
+              "value": "{{flow.data.name}}",
+              "key": "1"
+            },
+            {
+              "value": "{{flow.data.parameters.dayCode}}",
+              "key": "2"
+            },
+            {
+              "value": "{{flow.data.parameters. timeCode}}",
+              "key": "3"
+            }
+          ],
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "content_sid": "HX24a7e3e1da1cb00f4c810dcc03eb24a9",
+          "body": "*Incoming Spot Request*\n\nHey {{flow.data.name}}. A spot opened up for you at *Glens Bakehouse, Koramangala*. \n\nSpot Day: {{flow.data.parameters.dayCode}}\nSpot Time: {{flow.data.parameters.timeCode}}\n\nReply with a \"YES\" if you would be available to do the spot.\n\n\n_N.B. This request will expire in 2 hours._",
+          "timeout": "7200"
+        }
+      },
+      {
+        "name": "check_response_ad_hoc",
+        "type": "split-based-on",
+        "transitions": [
+          {
+            "next": "invalid_choice",
+            "event": "noMatch"
+          },
+          {
+            "next": "register_ad_hoc_spot",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value matches_any_of Yes,yes,Y,y,YES,yeah,Yeah,Yup,yup",
+                "arguments": [
+                  "{{widgets.ad_hoc_spot_alt.inbound.Body}}"
+                ],
+                "type": "matches_any_of",
+                "value": "Yes,yes,Y,y,YES,yeah,Yeah,Yup,yup"
+              }
+            ]
+          },
+          {
+            "next": "comic_unavailable",
+            "event": "match",
+            "conditions": [
+              {
+                "friendly_name": "If value matches_any_of No,no,NO,nope,Nope,N,n,nah",
+                "arguments": [
+                  "{{widgets.ad_hoc_spot_alt.inbound.Body}}"
+                ],
+                "type": "matches_any_of",
+                "value": "No,no,NO,nope,Nope,N,n,nah"
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "input": "{{widgets.ad_hoc_spot_alt.inbound.Body}}",
+          "offset": {
+            "x": 4540,
+            "y": 210
+          }
+        }
+      },
+      {
+        "name": "spot_cancelled",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2420,
+            "y": -240
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "{{flow.variables.value.customResponse}}"
+        }
+      },
+      {
+        "name": "cancel_spot",
+        "type": "make-http-request",
+        "transitions": [
+          {
+            "next": "Copy_of_TESTING",
+            "event": "success"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -2080,
+            "y": -240
+          },
+          "method": "POST",
+          "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+          "add_twilio_auth": false,
+          "parameters": [
+            {
+              "value": "\"{{widgets.new_ping.body}}\"",
+              "key": "pingDetails"
+            }
+          ],
+          "url": "https://script.google.com/macros/s/AKfycby15ff4DPac_sQ9s7uZzr7UZ18zkHNPnJ_yd1rCn6qKVy7fnH-SrQkAb6Cqyem4C9mi/exec"
+        }
+      },
+      {
+        "name": "Copy_of_TESTING",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -1750,
+            "y": -240
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "{{widgets.cancel_spot.body}}"
+        }
+      },
+      {
+        "name": "features_page_2",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 2320,
+            "y": 730
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "content_template",
+          "to": "{{contact.channel.address}}",
+          "content_sid": "HX6b4ae1686c28e56ebde1ae4e563351ef",
+          "body": "Hello {{flow.variables.value.firstName}}. Good day!"
+        }
+      },
+      {
+        "name": "clear_spot_request",
+        "type": "make-http-request",
+        "transitions": [
+          {
+            "next": "cleared_spot_notify_user",
+            "event": "success"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": -150,
+            "y": 1030
+          },
+          "method": "POST",
+          "content_type": "application/x-www-form-urlencoded;charset=utf-8",
+          "add_twilio_auth": false,
+          "parameters": [
+            {
+              "value": "clearSpotRequest",
+              "key": "action"
+            },
+            {
+              "value": "{{flow.variables.value.spotRequestRowNumber}}",
+              "key": "spotRequestRowNumber"
+            },
+            {
+              "value": "{{flow.variables.value.spotAllocationRowNumber}}",
+              "key": "spotAllocationRowNumber"
+            },
+            {
+              "value": "{{flow.variables.value.fullName}}",
+              "key": "comicName"
+            },
+            {
+              "value": "{{flow.variables.value.formattedNumber}}",
+              "key": "comicNumber"
+            },
+            {
+              "value": "{{flow.variables.value.newPingRowNumber}}",
+              "key": "pingRowNumber"
+            }
+          ],
+          "url": "https://script.google.com/macros/s/AKfycby15ff4DPac_sQ9s7uZzr7UZ18zkHNPnJ_yd1rCn6qKVy7fnH-SrQkAb6Cqyem4C9mi/exec"
+        }
+      },
+      {
+        "name": "cleared_spot_notify_user",
+        "type": "send-message",
+        "transitions": [
+          {
+            "event": "sent"
+          },
+          {
+            "event": "failed"
+          }
+        ],
+        "properties": {
+          "offset": {
+            "x": 170,
+            "y": 1030
+          },
+          "service": "{{trigger.message.InstanceSid}}",
+          "channel": "{{trigger.message.ChannelSid}}",
+          "from": "{{flow.channel.address}}",
+          "message_type": "custom",
+          "to": "{{contact.channel.address}}",
+          "body": "Sure, {{flow.variables.value. firstName}}. I've now cleared out your spot request. 🫡"
+        }
+      }
+    ],
+    "initial_state": "Trigger",
+    "flags": {
+      "allow_concurrent_calls": true
+    }
+  }

@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow all access from Cloud Functions
+    // This relies on proper security in our Cloud Functions
+    match /{document=**} {
+      allow read, write: if request.auth != null && request.auth.token.firebase.sign_in_provider == 'google.com';
+      // In production, you would restrict this further to specific service accounts
+    }
+    
+    // Public data can be read by anyone but not written
+    match /config/public {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+} 
