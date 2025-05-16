@@ -10,14 +10,13 @@
     <img src="https://img.shields.io/badge/Type-WhatsApp_Bot-brightgreen" alt="Type: WhatsApp Bot">
     <img src="https://img.shields.io/badge/Duration-7_Months-blue" alt="Duration: 7 Months">
     <img src="https://img.shields.io/badge/Status-Decommissioned-blue" alt="Status: Decommissioned">
-    <img src="https://img.shields.io/badge/Processed-2200%2B_Requests-orange" alt="Processed: 2200+ Requests">
-    <img src="https://img.shields.io/badge/User_Base-150%2B_Comics-blueviolet" alt="User Base: 150+ Comics">
+    <img src="https://img.shields.io/badge/Processed-2200%2B_Requests-blueviolet" alt="Processed: 2200+ Requests">
+    <img src="https://img.shields.io/badge/User_Base-150%2B_Comics-violet" alt="User Base: 150+ Comics">
 </div>
 
 <div align="center">
-    <img src="https://img.shields.io/badge/-Glen's_Bakehouse,_Koramangala
--white" alt="Glen's Bakehouse, Koramangala">
-    <img src="https://img.shields.io/badge/-Punchlime_Productions-black" alt="Punchlime Production">
+    <img src="https://img.shields.io/badge/-Glens_Bakehouse,_Koramangala-white?style=for-the-badge&logo=organicmaps&logoColor=black" alt="Glen's Bakehouse, Koramangala">
+    <img src="https://img.shields.io/badge/-_Punchlime_Productions-black?style=for-the-badge&logo=planet&logoColor=white" alt="Punchlime Production">
 </div>
 
 ## 📱 Overview
